@@ -22,6 +22,7 @@ class createQAPage extends StatefulWidget {
 // ignore: camel_case_types
 class _createQAPageState extends State<createQAPage> {
   final List<String> _answers = <String>['answer1','answer2','answer3','answer4','answer5'];
+  bool pressed = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,25 +48,69 @@ class _createQAPageState extends State<createQAPage> {
                   margin:  EdgeInsets.all(5.0),
                   child: Padding(
                     padding: EdgeInsets.all(5.0),
-                    child:Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
+                    child:Column(
+                      children: <Widget>[
+                        Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
+                        RaisedButton(
+                          child: Text("Answer"),
+                          onPressed:  _showText,
+                        ),
+                  ]
+                  )
                   )
               )
             ),
-            Expanded(
-            child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: _answers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    child: Center(child: Text(_answers[index], style: TextStyle(fontSize: 14.0))),
-                  );
-                }
-            ),
-            )
+                Expanded(
+                  child: Stack(
+                     // alignment: Alignment.bottomCenter,
+                    children:<Widget>[
+                      Positioned.fill(
+                          child: ListView.builder(
+                              padding: const EdgeInsets.all(8),
+                              itemCount: _answers.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Card(
+                                  child: Center(child: Text(_answers[index], style: TextStyle(fontSize: 26.0))), //TODO: parse answer
+                                );
+                              }
+                          ),
+                      ),
+
+                      if(pressed) Positioned.fill(
+                          child: Card(
+                              elevation: 5,
+                              margin:  EdgeInsets.all(8),
+                              child:Column(
+                                children: <Widget>[
+                                  Text("This would be a text box"),
+                                  RaisedButton(
+                                    child: Text("Cancel"),
+                                      onPressed: () {
+                                        setState(() {
+                                          pressed = false;
+                                        }
+                                        );
+                                      }
+                                  )
+                                ]
+                              )
+                          ),
+                      ),
+                    ]
+                  ),
+                ),
           ],
         ),
     );
   }
+
+  void _showText(){
+    setState(() {
+      pressed = true;
+    }
+    );
+  }
+
 
   void _createNewQA(){
     Navigator.of(context).push(
