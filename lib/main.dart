@@ -20,9 +20,36 @@ class createQAPage extends StatefulWidget {
 }
 
 // ignore: camel_case_types
-class _createQAPageState extends State<createQAPage> {
+class _createQAPageState extends State<createQAPage> with SingleTickerProviderStateMixin{
   final List<String> _answers = <String>['answer1','answer2','answer3','answer4','answer5'];
   bool pressed = false;
+  AnimationController _controller;
+  Animation<Offset> _offsetAnimation;
+  Tween<Offset> direction =Tween<Offset>(
+  begin:Offset(0,2),
+  end: Offset.zero,
+  );
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds:1),
+      vsync: this,
+    );
+
+    _offsetAnimation = direction.animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.decelerate,
+    ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,12 +87,12 @@ class _createQAPageState extends State<createQAPage> {
                   )
               )
             ),
-                Expanded(
-                  child: Stack(
+          Expanded(
+                child: Stack(
                      // alignment: Alignment.bottomCenter,
                     children:<Widget>[
-                      Positioned.fill(
-                          child: ListView.builder(
+                      Positioned.fill(child:
+                          ListView.builder(
                               padding: const EdgeInsets.all(8),
                               itemCount: _answers.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -76,39 +103,60 @@ class _createQAPageState extends State<createQAPage> {
                           ),
                       ),
 
-                      if(pressed) Positioned.fill(
-                          child: Card(
+                      SlideTransition(
+                          position: _offsetAnimation,
+                            child: Card(
                               elevation: 5,
                               margin:  EdgeInsets.all(8),
                               child:Column(
                                 children: <Widget>[
-                                  Text("This would be a text box"),
-                                  RaisedButton(
-                                    child: Text("Cancel"),
-                                      onPressed: () {
-                                        setState(() {
-                                          pressed = false;
-                                        }
-                                        );
-                                      }
+                                  TextField(
+                                    controller: TextEditingController(),
+                                    maxLines: 11, //For it to expand while typing
+                                    minLines: 3,
+                                    decoration: const InputDecoration(
+                                    hintText: 'Your Answer'
+                                    ),
+                                  ),
+                                  Row(
+                                    children: <Widget> [
+                                      Expanded(
+                                      child: RaisedButton(
+                                        child: Text("Cancel"),
+                                          onPressed: () {
+                                            // ignore: unnecessary_statements
+                                            _controller.reverse(from: 1.0);
+                                          }
+                                      ),
+                                      ),
+                                      Expanded(
+                                      child: RaisedButton(
+                                          child: Text("Submit"),
+                                          onPressed: () {
+                                            // ignore: unnecessary_statements
+                                            //run time timeline in reverse with beginning changed
+                                            direction.begin = Offset(0,-2);
+                                            _controller.reverse(from: 1.0);
+                                          }
+                                      ),
+                                      ),
+                                  ]
                                   )
                                 ]
                               )
                           ),
-                      ),
+                          ),
                     ]
                   ),
-                ),
+          ),
           ],
         ),
     );
   }
 
   void _showText(){
-    setState(() {
-      pressed = true;
-    }
-    );
+    direction.begin = Offset(0,2);
+    _controller.forward();
   }
 
 
