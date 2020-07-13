@@ -21,7 +21,11 @@ class createQAPage extends StatefulWidget {
 
 // ignore: camel_case_types
 class _createQAPageState extends State<createQAPage> with SingleTickerProviderStateMixin{
-  final List<String> _answers = <String>['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.','answer2','answer3','answer4','answer5'];
+  final List<String> _answers = <String>['orem ipsum dolor sit amet, consectetur adipiscing elit. In eu metus eu sapien blandit ultrices. Praesent varius massa lorem, venenatis egestas dolor mattis et. In sed mi ut tellus venenatis porttitor. Donec nisl eros, porta a purus ut, feugiat imperdiet dolor. Curabitur cursus euismod leo ut feugiat. Cras augue orci, bibendum id ex eget, cursus eleifend libero. Mauris quis eros erat. Suspendisse potenti. Etiam varius venenatis odio, id suscipit ante aliquam id. Nulla non porta orci. Suspendisse a sapien et magna semper interdum non id neque.',
+    'Sed molestie nisi nisl, sed mollis mi pharetra ut. Nulla facilisi. Vestibulum in aliquam urna. Integer nec porttitor purus. Donec purus odio, porttitor eu luctus ut, elementum ac dui. Praesent pretium bibendum ligula, ut rhoncus dolor congue vehicula. Fusce nec elementum dolor, id mattis velit. ',
+    'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
+    'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
+    'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '];
   bool pressed = false;
   AnimationController _controller;
   Animation<Offset> _offsetAnimation;
@@ -113,6 +117,20 @@ class _createQAPageState extends State<createQAPage> with SingleTickerProviderSt
                                             ),
                                             Container(
                                                height: 40,
+                                               child: Row(
+                                                 children: <Widget> [
+                                                   Padding(
+                                                      padding: EdgeInsets.all(10.0),
+                                                      child: Icon(
+                                                     Icons.account_circle,
+                                                     size: 20.0
+                                                   )),
+                                                    Padding(
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child:Text("John Smith") //TODO: parse user name
+                                                      )
+                                                 ]
+                                               ),
                                                color: Colors.white,
                                              ),
 
