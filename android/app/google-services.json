@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "842589478821",
+    "firebase_url": "https://qanda-2e1ac.firebaseio.com",
+    "project_id": "qanda-2e1ac",
+    "storage_bucket": "qanda-2e1ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842589478821:android:3b052eb6dd9711553c524c",
+        "android_client_info": {
+          "package_name": "com.ee.qanda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842589478821-pu2jlo28cv0bson5tigd4rqjmhqt6nqu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtqzSTHHID7MDOeChJbEsZwRJIfPpJ3RI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842589478821-pu2jlo28cv0bson5tigd4rqjmhqt6nqu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
