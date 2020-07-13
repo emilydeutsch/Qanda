@@ -21,10 +21,11 @@ class createQAPage extends StatefulWidget {
 
 // ignore: camel_case_types
 class _createQAPageState extends State<createQAPage> with SingleTickerProviderStateMixin{
-  final List<String> _answers = <String>['answer1','answer2','answer3','answer4','answer5'];
+  final List<String> _answers = <String>['Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.','answer2','answer3','answer4','answer5'];
   bool pressed = false;
   AnimationController _controller;
   Animation<Offset> _offsetAnimation;
+  TextEditingController _inputController = TextEditingController();
   Tween<Offset> direction =Tween<Offset>(
   begin:Offset(0,2),
   end: Offset.zero,
@@ -66,6 +67,7 @@ class _createQAPageState extends State<createQAPage> with SingleTickerProviderSt
   Widget _QABoxes(){
     return Container(
         width: double.infinity,
+        color: Colors.black12,
         child: Column(
           children: <Widget>[
             SizedBox(
@@ -88,7 +90,7 @@ class _createQAPageState extends State<createQAPage> with SingleTickerProviderSt
               )
             ),
           Expanded(
-                child: Stack(
+                child:Stack(
                      // alignment: Alignment.bottomCenter,
                     children:<Widget>[
                       Positioned.fill(child:
@@ -97,48 +99,71 @@ class _createQAPageState extends State<createQAPage> with SingleTickerProviderSt
                               itemCount: _answers.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Card(
-                                  child: Center(child: Text(_answers[index], style: TextStyle(fontSize: 26.0))), //TODO: parse answer
-                                );
+                                          child:Column(
+                                            children: <Widget>[
+                                            LimitedBox(
+                                            maxHeight: 150,
+                                            child: SingleChildScrollView(
+                                          child:Center(
+                                                child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                                child: Text(_answers[index], style: TextStyle(fontSize: 16.0))), //TODO: parse answer
+                                            ),
+                                          ),
+                                            ),
+                                            Container(
+                                               height: 40,
+                                               color: Colors.white,
+                                             ),
+
+                                ],
+                                          )
+                                            );
                               }
+
                           ),
                       ),
-
-                      SlideTransition(
+                      SizedBox(
+                        height: 300,
+                      child: SlideTransition(
                           position: _offsetAnimation,
                             child: Card(
-                              elevation: 5,
+                              elevation: 15,
                               margin:  EdgeInsets.all(8),
                               child:Column(
                                 children: <Widget>[
-                                  TextField(
-                                    controller: TextEditingController(),
-                                    maxLines: 11, //For it to expand while typing
+                                  Padding(
+                                     padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                    controller: _inputController,
+                                    maxLines: 9, //For it to expand while typing
                                     minLines: 3,
                                     decoration: const InputDecoration(
                                     hintText: 'Your Answer'
                                     ),
                                   ),
-                                  Row(
-                                    children: <Widget> [
-                                      Expanded(
-                                      child: RaisedButton(
+                                  ),
+                                  ButtonBar(
+                                      children: <Widget> [
+                                      RaisedButton(
                                         child: Text("Cancel"),
                                           onPressed: () {
                                             // ignore: unnecessary_statements
                                             _controller.reverse(from: 1.0);
                                           }
                                       ),
-                                      ),
-                                      Expanded(
-                                      child: RaisedButton(
+                                      RaisedButton(
                                           child: Text("Submit"),
                                           onPressed: () {
                                             // ignore: unnecessary_statements
                                             //run time timeline in reverse with beginning changed
                                             direction.begin = Offset(0,-2);
                                             _controller.reverse(from: 1.0);
+                                            setState(() {
+                                              _answers.add(_inputController.text);
+                                              _inputController.clear();
+                                            });
                                           }
-                                      ),
                                       ),
                                   ]
                                   )
@@ -146,8 +171,9 @@ class _createQAPageState extends State<createQAPage> with SingleTickerProviderSt
                               )
                           ),
                           ),
+                      )
                     ]
-                  ),
+                ),
           ),
           ],
         ),
