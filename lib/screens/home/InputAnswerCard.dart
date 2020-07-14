@@ -69,10 +69,10 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
 
   void slideUpwardsSubmit(){
     direction.begin = Offset(0,-2);
-    _slideController.reverse(from: 1.0);
+    _slideController.reverse();
   }
   void slideDownCancel(){
-    _slideController.reverse(from: 1.0);
+    _slideController.reverse();
   }
   void slideUpShow(){
     direction.begin = Offset(0,2);
