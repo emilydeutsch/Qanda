@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qanda/services/auth.dart';
 
 // ignore: camel_case_types
 class Home extends StatefulWidget {
@@ -21,6 +22,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     begin:Offset(0,2),
     end: Offset.zero,
   );
+
+  // Authorization stuff
+  final AuthService _auth = AuthService();
+
   @override
   void initState() {
     super.initState();
@@ -47,8 +52,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     return Scaffold(
         appBar: AppBar(
           title: Text("Today's Question"),
-          actions: [
-            IconButton(icon: Icon(Icons.add),onPressed: _createNewQA)
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.add),onPressed: _createNewQA),
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
+              onPressed: () async {
+                await _auth.signOut();
+              },
+            )
           ],
         ),
         body: _QABoxes()
