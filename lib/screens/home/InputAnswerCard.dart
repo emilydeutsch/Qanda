@@ -10,8 +10,8 @@ class InputAnswerCard extends StatefulWidget {
 }
 
 class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProviderStateMixin{
-  AnimationController _controller;
-  Animation<Offset> _offsetAnimation;
+  AnimationController _slideController;
+  Animation<Offset> _slideAnimation;
   Tween<Offset> direction =Tween<Offset>(
     begin:Offset(0,2),
     end: Offset.zero,
@@ -20,13 +20,13 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _slideController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
     );
 
-    _offsetAnimation = direction.animate(CurvedAnimation(
-      parent: _controller,
+    _slideAnimation = direction.animate(CurvedAnimation(
+      parent: _slideController,
       curve: Curves.decelerate,
     ));
   }
@@ -34,14 +34,14 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _slideController.dispose();
   }
 
   //Could move the entire widget structure here, but I want to do it after we get firebase working
   @override
   Widget build(BuildContext context) {
     return SlideTransition(
-        position: _offsetAnimation,
+        position: _slideAnimation,
         child:widget.child,
     );
   }
@@ -49,10 +49,10 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
   @override
   void didUpdateWidget(InputAnswerCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _runExpandCheck();
+    _runSlideCheck();
   }
 
-  void _runExpandCheck() {
+  void _runSlideCheck() {
     if(widget.setSlide=='Answer') {
       slideUpShow();
     }
@@ -69,13 +69,13 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
 
   void slideUpwardsSubmit(){
     direction.begin = Offset(0,-2);
-    _controller.reverse(from: 1.0);
+    _slideController.reverse(from: 1.0);
   }
   void slideDownCancel(){
-    _controller.reverse(from: 1.0);
+    _slideController.reverse(from: 1.0);
   }
   void slideUpShow(){
     direction.begin = Offset(0,2);
-    _controller.forward();
+    _slideController.forward();
   }
 }

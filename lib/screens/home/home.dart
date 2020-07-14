@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qanda/screens/home/CollapseCard.dart';
 import 'package:qanda/screens/home/InputAnswerCard.dart';
 import 'package:qanda/services/auth.dart';
 
@@ -15,33 +16,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
     'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
     'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '];
-  AnimationController _controller;
-  Animation<double> _animation;
+  bool _isExpanded=true;
   String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
 
   // Authorization stuff
   final AuthService _auth = AuthService();
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds:1),
-      vsync: this,
-    );
-
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.fastOutSlowIn,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
 
 
   @override
@@ -81,16 +61,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           children: <Widget>[
                             Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
                             RaisedButton(
-                              child: Text("Show"),
+                              child: Text("Expand/Collapse"),
                               onPressed: (){
-                                _controller.forward();
+                                setState(() {
+                                  _isExpanded = !_isExpanded;
+                                });
                                 },
-                            ),
-                            RaisedButton(
-                              child: Text("Collapse"),
-                              onPressed: (){
-                                _controller.reverse(from:1.0);
-                              },
                             ),
                             RaisedButton(
                               child: Text("Answer"),
@@ -107,9 +83,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
             child:Stack(
               // alignment: Alignment.bottomCenter,
                 children:<Widget>[
-                  SizeTransition(
-                  axisAlignment:1.0,
-                  sizeFactor: _animation,
+                  CollapseCard(
+                  expand: _isExpanded,
                   child:Positioned.fill(child:
                   ListView.builder(
                       padding: const EdgeInsets.all(8),
