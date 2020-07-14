@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qanda/screens/home/InputAnswerCard.dart';
 import 'package:qanda/services/auth.dart';
 
 // ignore: camel_case_types
@@ -14,14 +15,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
     'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
     'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '];
-  bool pressed = false;
   AnimationController _controller;
-  Animation<Offset> _offsetAnimation;
+  Animation<double> _animation;
+  String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
-  Tween<Offset> direction =Tween<Offset>(
-    begin:Offset(0,2),
-    end: Offset.zero,
-  );
 
   // Authorization stuff
   final AuthService _auth = AuthService();
@@ -34,10 +31,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       vsync: this,
     );
 
-    _offsetAnimation = direction.animate(CurvedAnimation(
+    _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.decelerate,
-    ));
+      curve: Curves.fastOutSlowIn,
+    );
   }
 
   @override
@@ -84,8 +81,22 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           children: <Widget>[
                             Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
                             RaisedButton(
+                              child: Text("Show"),
+                              onPressed: (){
+                                _controller.forward();
+                                },
+                            ),
+                            RaisedButton(
+                              child: Text("Collapse"),
+                              onPressed: (){
+                                _controller.reverse(from:1.0);
+                              },
+                            ),
+                            RaisedButton(
                               child: Text("Answer"),
-                              onPressed:  _showText,
+                              onPressed:(){  setState(() {
+                                _slideType = "Answer";
+                              });},
                             ),
                           ]
                       )
@@ -96,7 +107,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
             child:Stack(
               // alignment: Alignment.bottomCenter,
                 children:<Widget>[
-                  Positioned.fill(child:
+                  SizeTransition(
+                  axisAlignment:1.0,
+                  sizeFactor: _animation,
+                  child:Positioned.fill(child:
                   ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemCount: _answers.length,
@@ -140,10 +154,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
 
                   ),
                   ),
+                  ),
                   SizedBox(
                     height: 300,
-                    child: SlideTransition(
-                      position: _offsetAnimation,
+                    child: InputAnswerCard(
+                      setSlide: _slideType,
                       child: Card(
                           elevation: 15,
                           margin:  EdgeInsets.all(8),
@@ -166,7 +181,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                           child: Text("Cancel"),
                                           onPressed: () {
                                             // ignore: unnecessary_statements
-                                            _controller.reverse(from: 1.0);
+                                            //_controller.reverse(from: 1.0);
+                                            setState(() {
+                                              _slideType = "Cancel";
+                                            });
                                           }
                                       ),
                                       RaisedButton(
@@ -174,9 +192,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                           onPressed: () {
                                             // ignore: unnecessary_statements
                                             //run time timeline in reverse with beginning changed
-                                            direction.begin = Offset(0,-2);
-                                            _controller.reverse(from: 1.0);
+                                            //direction.begin = Offset(0,-2);
+                                            //_controller.reverse(from: 1.0);
                                             setState(() {
+                                              _slideType = "Submit";
                                               _answers.add(_inputController.text);
                                               _inputController.clear();
                                             });
@@ -196,12 +215,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       ),
     );
   }
-
-  void _showText(){
-    direction.begin = Offset(0,2);
-    _controller.forward();
-  }
-
 
   void _createNewQA(){
     Navigator.of(context).push(
