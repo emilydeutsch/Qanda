@@ -3,16 +3,16 @@ import 'package:qanda/services/auth.dart';
 import 'package:qanda/shared/constants.dart';
 import 'package:qanda/shared/loading.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
 
   final Function toggleView;
-  SignIn({ this.toggleView });
+  Register({ this.toggleView });
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
 
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
@@ -31,14 +31,14 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text('Sign in to Quanda'),
+        title: Text('Register for Quanda'),
         actions: <Widget>[
           FlatButton.icon(
-            icon: Icon(Icons.person_add),
-            label: Text('Register'),
-            onPressed: () {
-              widget.toggleView();
-            }
+              icon: Icon(Icons.person),
+              label: Text('Sign in'),
+              onPressed: () {
+                widget.toggleView();
+              }
           )
         ],
       ),
@@ -67,23 +67,23 @@ class _SignInState extends State<SignIn> {
               ),
               SizedBox(height: 20.0),
               RaisedButton(
-                color: Colors.pink[400],
-                child: Text(
-                  'Sign in',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    setState(() => loading = true);
-                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                    if (result == null) {
-                      setState(() {
-                        error = 'Could not sign in with those credentials';
-                        loading = false;
-                      });
+                  color: Colors.pink[400],
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      setState(() => loading = true);
+                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                      if (result == null) {
+                        setState(() {
+                          loading = false;
+                          error = 'please supply a valid email';
+                        });
+                      }
                     }
                   }
-                }
               ),
               SizedBox(height: 12.0),
               Text(
