@@ -52,7 +52,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
         children: <Widget>[
           SizedBox(
               width: double.infinity,
+              child:Hero(
+                tag: 'hi',
               child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                   elevation: 10,
                   margin:  EdgeInsets.all(5.0),
                   child: Padding(
@@ -78,6 +81,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                       )
                   )
               )
+              )
           ),
           Expanded(
             child:Stack(
@@ -91,6 +95,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                       itemCount: _answers.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                             child:Column(
                               children: <Widget>[
                                 LimitedBox(
@@ -135,6 +140,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                     child: InputAnswerCard(
                       setSlide: _slideType,
                       child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                           elevation: 15,
                           margin:  EdgeInsets.all(8),
                           child:Column(
@@ -191,6 +197,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     );
   }
 
+
+
+
+
   void _createNewQA(){
     Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -219,5 +229,57 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   }
 }
 
+class GridQuestionsView extends StatefulWidget {
+  @override
+  _GridQuestionsViewState createState() => _GridQuestionsViewState();
+}
+
+class _GridQuestionsViewState extends State<GridQuestionsView> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+        title: Text('All the Questions'),
+    ),
+    body: Column(
+      children: <Widget>[
+        SizedBox(
+          width:double.infinity,
+          height: 200,
+        ),
+        SizedBox(
+          width:double.infinity,
+          height: 400,
+        child: Hero(
+            tag: 'hi',
+            child: Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+              elevation: 10,
+              margin:  EdgeInsets.all(5.0),
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child:Column(
+                  children: <Widget>[
+                    Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
+                    RaisedButton(
+                        child:Text("GO"),
+                        onPressed: () {
+                          Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => Home()),
+                          );
+                        }
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ),
+        ),
+    ],
+      ),
+    );
+  }
+}
 
 
