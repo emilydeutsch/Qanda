@@ -205,23 +205,47 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (BuildContext context) {
-          final List<String> entries = <String>['A', 'B', 'C'];
+          final List<String> _questions = <String>['A', 'B', 'C'];
           return Scaffold(
             appBar: AppBar(
               title: Text('Add new Question or Answer'),
             ),
             body: Center(
               //child: Text("Options to add Question or Answer"),
-              child: ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: entries.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: Center(child: Text('Entry ${entries[index]}')),
-                    );
-                  }
-              ),
+              child:Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 15,
+          margin:  EdgeInsets.all(8),
+          child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _inputController,
+                        maxLines: 9, //For it to expand while typing
+                        minLines: 3,
+                        decoration: const InputDecoration(
+                            hintText: 'New Question'
+                        ),
+                      ),
+                    ),
+                    ButtonBar(
+                        children: <Widget> [
+                          RaisedButton(
+                              child: Text("Submit"),
+                              onPressed: () {
+                                setState(() {
+                                  _questions.add(_inputController.text);
+                                  _inputController.clear();
+                                });
+                              }
+                          ),
+                        ]
+                    )
+                  ]
+              )
             ),
+            )
           );
         },
       ),
