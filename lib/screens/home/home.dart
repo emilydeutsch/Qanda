@@ -1,10 +1,14 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:qanda/screens/home/CollapseCard.dart';
 import 'package:qanda/screens/home/InputAnswerCard.dart';
 import 'package:qanda/services/auth.dart';
 
 // ignore: camel_case_types
 class Home extends StatefulWidget {
+  final int questionIndex;
+  Home({this.questionIndex});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -16,6 +20,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
     'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
     'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '];
+  final List<String> _questions = <String>["What is your name?","How old are you?" ,"Third Question"];
   bool _isExpanded=true;
   String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
@@ -30,7 +35,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
         appBar: AppBar(
           title: Text("Today's Question"),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.add),onPressed: _createNewQA),
             FlatButton.icon(
               icon: Icon(Icons.person),
               label: Text('logout'),
@@ -53,16 +57,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
           SizedBox(
               width: double.infinity,
               child:Hero(
-                tag: 'hi',
+                tag: 'question'+widget.questionIndex.toString(),
               child: Card(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                   elevation: 10,
                   margin:  EdgeInsets.all(5.0),
                   child: Padding(
                       padding: EdgeInsets.all(5.0),
-                      child:Column(
+                      child:SingleChildScrollView(child:Column(
                           children: <Widget>[
-                            Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
+                            Text(_questions[widget.questionIndex], style: TextStyle(fontSize: 26.0)), //TODO: parse question
                             RaisedButton(
                               child: Text("Expand/Collapse"),
                               onPressed: (){
@@ -79,6 +83,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                             ),
                           ]
                       )
+                  )
                   )
               )
               )
@@ -108,12 +113,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                     ),
                                   ),
                                 ),
-                                Container(
+                            ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  color: Colors.white,
                                   height: 40,
                                   child: Row(
                                       children: <Widget> [
                                         Padding(
-                                            padding: EdgeInsets.all(10.0),
+                                            padding: EdgeInsets.all(3.0),
                                             child: Icon(
                                                 Icons.account_circle,
                                                 size: 20.0
@@ -124,9 +132,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                         )
                                       ]
                                   ),
-                                  color: Colors.white,
                                 ),
-
+                            )
                               ],
                             )
                         );
@@ -196,27 +203,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       ),
     );
   }
+}
 
 
+class AddQuestionPage extends StatefulWidget {
+  @override
+  _AddQuestionPageState createState() => _AddQuestionPageState();
+}
 
-
-
-  void _createNewQA(){
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          final List<String> _questions = <String>['A', 'B', 'C'];
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Add new Question or Answer'),
-            ),
-            body: Center(
-              //child: Text("Options to add Question or Answer"),
-              child:Card(
+class _AddQuestionPageState extends State<AddQuestionPage> {
+  TextEditingController _inputController = TextEditingController();
+  final List<String> _questions = <String>["What is your name?","How old are you?","Third Question?"];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Add new Question'),
+        ),
+        body: Center(
+          //child: Text("Options to add Question or Answer"),
+          child:Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 15,
-          margin:  EdgeInsets.all(8),
-          child: Column(
+              elevation: 15,
+              margin:  EdgeInsets.all(8),
+              child:Column(
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -237,6 +247,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                                 setState(() {
                                   _questions.add(_inputController.text);
                                   _inputController.clear();
+                                  Navigator.pop(context);
                                 });
                               }
                           ),
@@ -244,14 +255,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                     )
                   ]
               )
-            ),
-            )
-          );
-        },
-      ),
+          ),
+        )
     );
   }
 }
+
 
 class GridQuestionsView extends StatefulWidget {
   @override
@@ -259,47 +268,64 @@ class GridQuestionsView extends StatefulWidget {
 }
 
 class _GridQuestionsViewState extends State<GridQuestionsView> {
+  final List<String> _questions = <String>["What is your name?","How old are you?","Third Question?"];
   @override
   Widget build(BuildContext context) {
+    timeDilation=2.0;
     return Scaffold(
         appBar: AppBar(
         title: Text('All the Questions'),
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.add),
+                onPressed: (){Navigator.push(context,
+                    MaterialPageRoute<void>(
+                    builder: (BuildContext context) => AddQuestionPage()));}
+            ),
+          ],
     ),
-    body: Column(
+      body: Column(
       children: <Widget>[
-        SizedBox(
-          width:double.infinity,
-          height: 200,
+        ClipRRect(
+          borderRadius: BorderRadius.circular(5.0),
+        child: Image.asset(
+          'assets/images/Mountain.jpg',
+          height:300,
         ),
-        SizedBox(
-          width:double.infinity,
-          height: 400,
-        child: Hero(
-            tag: 'hi',
-            child: Card(
+        ),
+        Expanded(
+        child: ListView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: _questions.length,
+              itemBuilder: (BuildContext context, int index) {
+              return Hero(
+                  tag: 'question' +index.toString(),
+                child:  Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
               elevation: 10,
               margin:  EdgeInsets.all(5.0),
               child: Padding(
                 padding: EdgeInsets.all(5.0),
+                child:SingleChildScrollView(
                 child:Column(
                   children: <Widget>[
-                    Text("What is your favourite colour and why?", style: TextStyle(fontSize: 26.0)), //TODO: parse question
+                    Text(_questions[index], style: TextStyle(fontSize: 26.0)), //TODO: parse question
                     RaisedButton(
                         child:Text("GO"),
                         onPressed: () {
                           Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => Home()),
+                              SlideRightRoute(page:Home(questionIndex: index))
                           );
                         }
                     ),
                   ],
                 ),
               ),
-            ),
+                    ),
+                )
+            );
+              }
         ),
-        ),
+)
     ],
       ),
     );
@@ -307,3 +333,28 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 }
 
 
+class SlideRightRoute extends PageRouteBuilder {
+  final Widget page;
+  SlideRightRoute({this.page})
+      : super(
+    pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        ) =>
+    page,
+    transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+        ) =>
+        SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        ),
+  );
+}

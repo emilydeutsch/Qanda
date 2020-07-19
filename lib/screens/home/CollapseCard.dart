@@ -22,6 +22,7 @@ class _CollapseCardState extends State<CollapseCard>with SingleTickerProviderSta
       parent: collapseController,
       curve: Curves.fastOutSlowIn,
     );
+    _runExpandCheck();
   }
 
   @override
