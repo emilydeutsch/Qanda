@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qanda/screens/authenticate/authenticate.dart';
 import 'package:qanda/screens/home/home.dart';
 import 'package:qanda/models/user.dart';
+import 'package:qanda/services/database.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -20,7 +22,10 @@ class _WrapperState extends State<Wrapper> {
     if (user == null) {
       return Authenticate();
     } else {
-      return GridQuestionsView();
+      return StreamProvider<QuerySnapshot>.value(
+        value: DatabaseService().questions,
+        child: GridQuestionsView()
+      );
     }
   }
 }
