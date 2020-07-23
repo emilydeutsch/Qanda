@@ -20,22 +20,6 @@ class Home extends StatefulWidget {
 
 // ignore: camel_case_types
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  final List<String> _answers = <String>[
-    'orem ipsum dolor sit amet, consectetur adipiscing elit. In eu metus eu sapien blandit ultrices. Praesent varius massa lorem, venenatis egestas dolor mattis et. In sed mi ut tellus venenatis porttitor. Donec nisl eros, porta a purus ut, feugiat imperdiet dolor. Curabitur cursus euismod leo ut feugiat. Cras augue orci, bibendum id ex eget, cursus eleifend libero. Mauris quis eros erat. Suspendisse potenti. Etiam varius venenatis odio, id suscipit ante aliquam id. Nulla non porta orci. Suspendisse a sapien et magna semper interdum non id neque.',
-    'Sed molestie nisi nisl, sed mollis mi pharetra ut. Nulla facilisi. Vestibulum in aliquam urna. Integer nec porttitor purus. Donec purus odio, porttitor eu luctus ut, elementum ac dui. Praesent pretium bibendum ligula, ut rhoncus dolor congue vehicula. Fusce nec elementum dolor, id mattis velit. ',
-    'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
-    'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
-    'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '
-  ];
-  final List<String> _questions = <String>[
-    "What is your name?",
-    "How old are you?",
-    "Third Question"
-  ];
-  bool _isExpanded = true;
-  String _slideType; //used to change the slide type od the input card
-  TextEditingController _inputController = TextEditingController();
-
   // Authorization stuff
   final AuthService _auth = AuthService();
 
@@ -62,6 +46,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 }
+
+
+
+
+
 class QABoxes extends StatefulWidget {
   @override
 
@@ -74,29 +63,23 @@ class QABoxes extends StatefulWidget {
 
 class _QABoxesState extends State<QABoxes> {
   bool _isExpanded = true;
-  final List<String> _answers = <String>[
-    'orem ipsum dolor sit amet, consectetur adipiscing elit. In eu metus eu sapien blandit ultrices. Praesent varius massa lorem, venenatis egestas dolor mattis et. In sed mi ut tellus venenatis porttitor. Donec nisl eros, porta a purus ut, feugiat imperdiet dolor. Curabitur cursus euismod leo ut feugiat. Cras augue orci, bibendum id ex eget, cursus eleifend libero. Mauris quis eros erat. Suspendisse potenti. Etiam varius venenatis odio, id suscipit ante aliquam id. Nulla non porta orci. Suspendisse a sapien et magna semper interdum non id neque.',
-    'Sed molestie nisi nisl, sed mollis mi pharetra ut. Nulla facilisi. Vestibulum in aliquam urna. Integer nec porttitor purus. Donec purus odio, porttitor eu luctus ut, elementum ac dui. Praesent pretium bibendum ligula, ut rhoncus dolor congue vehicula. Fusce nec elementum dolor, id mattis velit. ',
-    'Donec eu sapien quam. Nulla nisi augue, mollis in lacus non, pellentesque aliquet elit. Etiam lacinia est quis elit condimentum consectetur quis et lectus. Nullam volutpat nunc arcu, nec hendrerit justo mollis at. Pellentesque ac congue tellus. Ut consequat justo tempus ligula bibendum faucibus. Maecenas ac ipsum placerat, suscipit sem sit amet, molestie nunc. Nullam orci nisi, interdum et suscipit id, lobortis non eros. ',
-    'Vestibulum tincidunt ut quam in mollis. Mauris sollicitudin sed ligula quis pharetra. Proin sit amet eleifend lacus, id placerat nulla. Suspendisse quis finibus metus, vel posuere odio. Integer interdum orci dui, a luctus lorem imperdiet nec. Sed ornare auctor feugiat. Suspendisse a condimentum nulla, ut suscipit est. Nam malesuada blandit elit. Sed porttitor diam vitae lorem ornare feugiat. Quisque varius vehicula accumsan. ',
-    'Integer rutrum lorem quis imperdiet fermentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Suspendisse at est erat. Donec convallis ullamcorper nunc, non porttitor ante volutpat mollis. Morbi vitae blandit nisi. Pellentesque vel eros vitae nisl mattis aliquet. Fusce sodales, mi et ullamcorper finibus, lorem mauris placerat est, sit amet facilisis mi enim sit amet mi. Vivamus finibus augue quis auctor placerat. '
-  ];
-  final List<String> _questions = <String>[
-    "What is your name?",
-    "How old are you?",
-    "Third Question"
-  ];
-
   String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
 
     final questions = Provider.of<QuerySnapshot>(context);
-    //print(questions.documents);
 
+
+    List<dynamic> listOfAnswers = [];
     for (var doc in questions.documents) {
-      print(doc.documentID);
+      if (doc.documentID == widget.listOfQuestions[widget.questionIndex]) {
+        if (doc.data['answers'] != null) {
+          listOfAnswers = doc.data['answers'];
+        }
+      }
     }
 
     return Container(
@@ -147,7 +130,7 @@ class _QABoxesState extends State<QABoxes> {
                     child:Positioned.fill(child:
                     ListView.builder(
                         padding: const EdgeInsets.all(8),
-                        itemCount: _answers.length,
+                        itemCount: listOfAnswers.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -159,7 +142,7 @@ class _QABoxesState extends State<QABoxes> {
                                       child:Center(
                                         child: Padding(
                                             padding: EdgeInsets.all(8.0),
-                                            child: Text(_answers[index], style: TextStyle(fontSize: 16.0))), //TODO: parse answer
+                                            child: Text(listOfAnswers[index], style: TextStyle(fontSize: 16.0))),
                                       ),
                                     ),
                                   ),
@@ -227,14 +210,20 @@ class _QABoxesState extends State<QABoxes> {
                                       ),
                                       RaisedButton(
                                           child: Text("Submit"),
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            print(listOfAnswers+[_inputController.text]);
+                                            await DatabaseService(question: widget.listOfQuestions[widget.questionIndex]).updateQuestionData(
+                                                "Test Person", listOfAnswers+[_inputController.text]);
+
+
+
+
                                             // ignore: unnecessary_statements
                                             //run time timeline in reverse with beginning changed
                                             //direction.begin = Offset(0,-2);
                                             //_controller.reverse(from: 1.0);
                                             setState(() {
                                               _slideType = "Submit";
-                                              _answers.add(_inputController.text);
                                               _inputController.clear();
                                             });
                                           }

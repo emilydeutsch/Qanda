@@ -13,7 +13,7 @@ class DatabaseService {
     return await questionCollection.document(question).setData({});
   }
 
-  Future updateQuestionData (String name, Map<String, dynamic> answers) async {
+  Future updateQuestionData (String name, List<dynamic> answers) async {
     return await questionCollection.document(question).setData({
       'name': name,
       'answers': answers,
