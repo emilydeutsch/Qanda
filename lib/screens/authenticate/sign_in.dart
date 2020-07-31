@@ -19,7 +19,6 @@ class _SignInState extends State<SignIn> {
   bool loading = false;
 
   // text field state
-  //TODO: Add username data
   String email = '';
   String password = '';
   String error = '';

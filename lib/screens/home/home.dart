@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:qanda/screens/authenticate/sign_in.dart';
+import 'package:qanda/models/user.dart';
 import 'package:qanda/screens/home/CollapseCard.dart';
 import 'package:qanda/screens/home/InputAnswerCard.dart';
 import 'package:qanda/services/auth.dart';
@@ -8,6 +9,7 @@ import 'package:qanda/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qanda/shared/constants.dart';
+
 
 
 // ignore: camel_case_types
@@ -55,15 +57,27 @@ class _QABoxesState extends State<QABoxes> {
   @override
   Widget build(BuildContext context) {
 
+    final user = Provider.of<User>(context);
+
     final questions = Provider.of<QuerySnapshot>(context);
 
+    String name = "";
+
+    String Question_name = "";
 
     List<dynamic> listOfAnswers = [];
+    List<dynamic> listOfNames = [];
     for (var doc in questions.documents) {
       if (doc.documentID == widget.listOfQuestions[widget.questionIndex]) {
         if (doc.data['answers'] != null) {
           listOfAnswers = doc.data['answers'];
+          listOfNames = doc.data['names'];
         }
+        Question_name = doc.data['name'];
+      }
+      if (doc.documentID == "users") {
+        name = doc.data[user.uid];
+        print(name);
       }
     }
 
@@ -108,6 +122,27 @@ class _QABoxesState extends State<QABoxes> {
                           child:SingleChildScrollView(child:Column(
                               children: <Widget>[
                                 Text(widget.listOfQuestions[widget.questionIndex], style: TextStyle(fontSize: 26.0)),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    color: Colors.white,
+                                    height: 40,
+                                    child: Row(
+                                        children: <Widget> [
+                                          Padding(
+                                              padding: EdgeInsets.all(3.0),
+                                              child: Icon(
+                                                  Icons.account_circle,
+                                                  size: 20.0
+                                              )),
+                                          Padding(
+                                              padding: EdgeInsets.all(5.0),
+                                              child:Text(Question_name)
+                                          )
+                                        ]
+                                    ),
+                                  ),
+                                ),
                                 RaisedButton(
                                   child: Text("Expand/Collapse"),
                                   onPressed: (){
@@ -169,7 +204,7 @@ class _QABoxesState extends State<QABoxes> {
                                                 )),
                                             Padding(
                                                 padding: EdgeInsets.all(5.0),
-                                                child:Text("John Smith") //TODO: parse user name
+                                                child:Text(listOfNames[index])
                                             )
                                           ]
                                       ),
@@ -180,74 +215,74 @@ class _QABoxesState extends State<QABoxes> {
                           );
                         }
 
-                    ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 300,
-                    child: InputAnswerCard(
-                      setSlide: _slideType,
-                      child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                          elevation: 15,
-                          margin:  EdgeInsets.all(8),
-                          child:Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: _inputController,
-                                    maxLines: 9, //For it to expand while typing
-                                    minLines: 3,
-                                    decoration: const InputDecoration(
-                                        hintText: 'Your Answer'
-                                    ),
-                                  ),
-                                ),
-                                ButtonBar(
-                                    children: <Widget> [
-                                      RaisedButton(
-                                          child: Text("Cancel"),
-                                          onPressed: () {
-                                            // ignore: unnecessary_statements
-                                            //_controller.reverse(from: 1.0);
-                                            setState(() {
-                                              _slideType = "Cancel";
-                                            });
-                                          }
-                                      ),
-                                      RaisedButton(
-                                          child: Text("Submit"),
-                                          onPressed: () async {
-                                            print(listOfAnswers+[_inputController.text]);
-                                            await DatabaseService(question: widget.listOfQuestions[widget.questionIndex]).updateQuestionData(
-                                                "Test Person", listOfAnswers+[_inputController.text]);
-
-
-
-
-                                            // ignore: unnecessary_statements
-                                            //run time timeline in reverse with beginning changed
-                                            //direction.begin = Offset(0,-2);
-                                            //_controller.reverse(from: 1.0);
-                                            setState(() {
-                                              _slideType = "Submit";
-                                              _inputController.clear();
-                                            });
-                                          }
-                                      ),
-                                    ]
-                                )
-                              ]
-                          )
+                      ),
                       ),
                     ),
-                  )
-                ]
+                    SizedBox(
+                      height: 300,
+                      child: InputAnswerCard(
+                        setSlide: _slideType,
+                        child: Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            elevation: 15,
+                            margin:  EdgeInsets.all(8),
+                            child:Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      controller: _inputController,
+                                      maxLines: 9, //For it to expand while typing
+                                      minLines: 3,
+                                      decoration: const InputDecoration(
+                                          hintText: 'Your Answer'
+                                      ),
+                                    ),
+                                  ),
+                                  ButtonBar(
+                                      children: <Widget> [
+                                        RaisedButton(
+                                            child: Text("Cancel"),
+                                            onPressed: () {
+                                              // ignore: unnecessary_statements
+                                              //_controller.reverse(from: 1.0);
+                                              setState(() {
+                                                _slideType = "Cancel";
+                                              });
+                                            }
+                                        ),
+                                        RaisedButton(
+                                            child: Text("Submit"),
+                                            onPressed: () async {
+                                              print(listOfAnswers+[_inputController.text]);
+                                              await DatabaseService(question: widget.listOfQuestions[widget.questionIndex]).updateQuestionData(
+                                                  Question_name, listOfAnswers+[_inputController.text], listOfNames+[name]);
+
+
+
+
+                                              // ignore: unnecessary_statements
+                                              //run time timeline in reverse with beginning changed
+                                              //direction.begin = Offset(0,-2);
+                                              //_controller.reverse(from: 1.0);
+                                              setState(() {
+                                                _slideType = "Submit";
+                                                _inputController.clear();
+                                              });
+                                            }
+                                        ),
+                                      ]
+                                  )
+                                ]
+                            )
+                        ),
+                      ),
+                    )
+                  ]
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
     );
   }
 }
@@ -262,6 +297,10 @@ class _QABoxesState extends State<QABoxes> {
 
 
 class AddQuestionPage extends StatefulWidget {
+
+  final String name;
+  AddQuestionPage({this.name});
+
   @override
   _AddQuestionPageState createState() => _AddQuestionPageState();
 }
@@ -317,7 +356,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                                 child: Text("Submit"),
                                 onPressed: () async {
                                   if (_formKey.currentState.validate()) {
-                                    await DatabaseService(question: question).createQuestionData();
+                                    await DatabaseService(question: question).createQuestionData(widget.name);
 
 
                                     setState(() {
@@ -364,12 +403,20 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
   Widget build(BuildContext context) {
     timeDilation=2.0;
 
+    final user = Provider.of<User>(context);
+    String name = "";
+
     final questions = Provider.of<QuerySnapshot>(context);
     //print(questions.documents);
 
     listOfQuestions.clear();
     for (var doc in questions.documents) {
       listOfQuestions.add(doc.documentID);
+
+      if (doc.documentID == "users") {
+        name = doc.data[user.uid];
+        print(name);
+      }
     }
 
     return Scaffold(
@@ -391,7 +438,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
               IconButton(icon: Icon(Icons.add),
                   onPressed: (){Navigator.push(context,
                       MaterialPageRoute<void>(
-                          builder: (BuildContext context) => AddQuestionPage()));}
+                          builder: (BuildContext context) => AddQuestionPage(name: name))));}
               ),
             ],
           ),
