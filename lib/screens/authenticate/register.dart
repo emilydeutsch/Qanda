@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qanda/models/user.dart';
 import 'package:qanda/services/auth.dart';
 import 'package:qanda/services/database.dart';
 import 'package:qanda/shared/constants.dart';
@@ -36,15 +35,10 @@ class _RegisterState extends State<Register> {
     Map<String, dynamic> names;
 
     for (var doc in questions.documents) {
-
-
       if (doc.documentID == "users") {
         names = doc.data;
-
       }
     }
-    print(names);
-
 
     return loading ? Loading() : StreamProvider<QuerySnapshot>.value(
       value: DatabaseService().questions,

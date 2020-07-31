@@ -1,8 +1,6 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qanda/models/user.dart';
-import 'package:qanda/services/database.dart';
 
 class AuthService {
 

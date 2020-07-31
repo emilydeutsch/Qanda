@@ -9,14 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qanda/shared/constants.dart';
 
-  //
-  //BIG PLAN IDEA:
-  //Instead of having a separate stream, have the user data inside the questions collection
-  //Store user data in a document called "User Data". When getting documents, use an if statement to filter out "User Data" and put it into a separate array.
-  //Send the "User Data" array to the Home, where it can be accessed for searching.
-  //Then, when a question is answered, search the "User Data" array for the current user with the uid, then access the user's name from the document with the uid.
-  //Finally, send the user's name in the updateuserdata function, where the name will be stored in the question's document.
-  //
+
 
 // ignore: camel_case_types
 class Home extends StatefulWidget {
