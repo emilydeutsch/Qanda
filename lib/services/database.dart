@@ -8,16 +8,22 @@ class DatabaseService {
   // collection reference
   final CollectionReference questionCollection = Firestore.instance.collection('questions');
 
-  //TODO: ADD USERNAME TO QUESTION
-  Future createQuestionData () async {
-    return await questionCollection.document(question).setData({});
+  Future createQuestionData (String name) async {
+    return await questionCollection.document(question).setData({
+      'name': name,
+    });
   }
 
-  Future updateQuestionData (String name, List<dynamic> answers) async {
+  Future updateQuestionData (String name, List<dynamic> answers, List<dynamic> names) async {
     return await questionCollection.document(question).setData({
       'name': name,
       'answers': answers,
+      'names': names,
     });
+  }
+
+  Future createUserData (Map<String, dynamic> names) async {
+    return await questionCollection.document("users").setData(names);
   }
 
   //get questions stream

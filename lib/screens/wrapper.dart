@@ -20,7 +20,10 @@ class _WrapperState extends State<Wrapper> {
 
     //return either home or auth widget
     if (user == null) {
-      return Authenticate();
+      return StreamProvider<QuerySnapshot>.value(
+          value: DatabaseService().questions,
+          child: Authenticate()
+      );
     } else {
       return StreamProvider<QuerySnapshot>.value(
         value: DatabaseService().questions,

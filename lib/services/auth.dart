@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qanda/models/user.dart';
+import 'package:qanda/services/database.dart';
 
 class AuthService {
 
@@ -33,6 +36,8 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
+      print(user);
+      inspect(user);
       return _userFromFirebaseUser(user);
     } catch(e) {
       print(e.toString());
