@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:qanda/screens/authenticate/sign_in.dart';
 import 'package:qanda/screens/home/CollapseCard.dart';
 import 'package:qanda/screens/home/InputAnswerCard.dart';
 import 'package:qanda/services/auth.dart';
@@ -21,26 +22,12 @@ class Home extends StatefulWidget {
 // ignore: camel_case_types
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   // Authorization stuff
-  final AuthService _auth = AuthService();
-
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<QuerySnapshot>.value(
     value: DatabaseService().questions,
     child: Scaffold(
-          appBar: AppBar(
-            title: Text("Today's Question"),
-            actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
-                onPressed: () async {
-                  await _auth.signOut();
-                },
-              )
-            ],
-          ),
           body: QABoxes(questionIndex: widget.questionIndex, listOfQuestions: widget.listOfQuestions)
     )
     );
@@ -52,8 +39,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
 
 class QABoxes extends StatefulWidget {
-  @override
-
   final int questionIndex;
   final List<String> listOfQuestions;
   QABoxes({this.questionIndex, this.listOfQuestions});
@@ -65,7 +50,7 @@ class _QABoxesState extends State<QABoxes> {
   bool _isExpanded = true;
   String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
-
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +69,32 @@ class _QABoxesState extends State<QABoxes> {
 
     return Container(
       width: double.infinity,
-      color: Colors.black12,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Colors.blue[900], Colors.blue[500],Colors.green[200]]
+          )
+      ),
       child: Column(
         children: <Widget>[
+          AppBar(
+            title: Text("Today's Question"),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+                onPressed: () async {
+                  await _auth.signOut();
+                  Navigator.push(context,
+                      SlideRightRoute(page:SignIn())
+                  );
+                },
+              )
+            ],
+          ),
           SizedBox(
               width: double.infinity,
               child:Hero(
@@ -149,7 +157,7 @@ class _QABoxesState extends State<QABoxes> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Container(
-                                      color: Colors.white,
+                                      color: Colors.transparent,
                                       height: 40,
                                       child: Row(
                                           children: <Widget> [
@@ -268,47 +276,63 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Add new Question'),
-        ),
-        body: Center(
-          child: Form(
-            key: _formKey,
-            child:Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                elevation: 15,
-                margin:  EdgeInsets.all(8),
-                child:Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: textInputDecoration.copyWith(hintText: 'New Question'),
-                          maxLines: 10, //For it to expand while typing
-                          minLines: 3,
-                            validator: (val) => val.isEmpty ? 'Enter a question' : null,
-                          onChanged: (val) {
-                            setState(() => question = val);
-                          }
-                        ),
-                      ),
-                      RaisedButton(
-                          child: Text("Submit"),
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              await DatabaseService(question: question).createQuestionData();
+
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.blue[900], Colors.blue[500],Colors.green[200]]
+              )
+          ),
+          child: Column(
+            children: <Widget>[
+              AppBar(
+                  title: Text('Add new Question'),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0
+              ),
+              Center(
+                child: Form(
+                  key: _formKey,
+                  child:Card(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      elevation: 15,
+                      margin:  EdgeInsets.all(8),
+                      child:Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                decoration: textInputDecoration.copyWith(hintText: 'New Question'),
+                                maxLines: 10, //For it to expand while typing
+                                minLines: 3,
+                                  validator: (val) => val.isEmpty ? 'Enter a question' : null,
+                                onChanged: (val) {
+                                  setState(() => question = val);
+                                }
+                              ),
+                            ),
+                            RaisedButton(
+                                child: Text("Submit"),
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    await DatabaseService(question: question).createQuestionData();
 
 
-                              setState(() {
-                                Navigator.pop(context);
-                              });
-                            }
-                          }
-                      ),
-                    ]
+                                    setState(() {
+                                      Navigator.pop(context);
+                                    });
+                                  }
+                                }
+                            ),
+                          ]
+                      )
+                  ),
                 )
-            ),
-          )
+              ),
+            ],
+          ),
         )
     );
   }
@@ -349,60 +373,64 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-        title: Text('All the Questions'),
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.add),
-                onPressed: (){Navigator.push(context,
-                    MaterialPageRoute<void>(
-                    builder: (BuildContext context) => AddQuestionPage()));}
-            ),
-          ],
-    ),
-      body: Column(
-      children: <Widget>[
-        ClipRRect(
-          borderRadius: BorderRadius.circular(5.0),
-        child: Image.asset(
-          'assets/images/Mountain.jpg',
-          height:300,
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [Colors.blue[900], Colors.blue[500],Colors.green[200]]
+            )
         ),
-        ),
-        Expanded(
-        child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: listOfQuestions.length,
-              itemBuilder: (BuildContext context, int index) {
-              return Hero(
-                  tag: 'question' +index.toString(),
-                child:  Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-              elevation: 10,
-              margin:  EdgeInsets.all(5.0),
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child:SingleChildScrollView(
-                child:Column(
-                  children: <Widget>[
-                    Text(listOfQuestions[index], style: TextStyle(fontSize: 26.0)), //TODO: parse question
-                    RaisedButton(
-                        child:Text("GO"),
-                        onPressed: () {
-                          Navigator.push(context,
-                              SlideRightRoute(page:Home(questionIndex: index, listOfQuestions: listOfQuestions))
-                          );
-                        }
-                    ),
-                  ],
-                ),
+        child: Column(
+        children: <Widget>[
+          AppBar(
+            title: Text('All the Questions'),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.add),
+                  onPressed: (){Navigator.push(context,
+                      MaterialPageRoute<void>(
+                          builder: (BuildContext context) => AddQuestionPage()));}
               ),
-                    ),
-                )
-            );
-              }
-        ),
+            ],
+          ),
+          Expanded(
+          child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                itemCount: listOfQuestions.length,
+                itemBuilder: (BuildContext context, int index) {
+                return Hero(
+                    tag: 'question' +index.toString(),
+                  child:  Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                elevation: 0,
+                margin:  EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 2.0),
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child:SingleChildScrollView(
+                  child:Column(
+                    children: <Widget>[
+                      Text(listOfQuestions[index], style: TextStyle(fontSize: 20.0)), //TODO: parse question
+                      RaisedButton(
+                          child:Text("GO"),
+                          onPressed: () {
+                            Navigator.push(context,
+                                SlideRightRoute(page:Home(questionIndex: index, listOfQuestions: listOfQuestions))
+                            );
+                          }
+                      ),
+                    ],
+                  ),
+                ),
+                      ),
+                  )
+              );
+                }
+          ),
 )
     ],
+        ),
       ),
     );
   }
