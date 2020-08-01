@@ -402,6 +402,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 
   Widget build(BuildContext context) {
     timeDilation=2.0;
+    final AuthService _auth = AuthService();
 
     final user = Provider.of<User>(context);
     String name = "";
@@ -433,13 +434,31 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
           AppBar(
             title: Text('All the Questions'),
             backgroundColor: Colors.transparent,
+            leading: IconButton(icon: Icon(Icons.settings),
+              onPressed: (){
+
+              }
+            ),
             elevation: 0.0,
             actions: <Widget>[
+              /*FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+                textColor: Colors.white,
+                onPressed: () async {
+                  await _auth.signOut();
+                  Navigator.push(context,
+                      SlideRightRoute(page:SignIn())
+                  );
+                },
+              ),*/
               IconButton(icon: Icon(Icons.add),
-                  onPressed: (){Navigator.push(context,
-                      MaterialPageRoute<void>(
-                          builder: (BuildContext context) => AddQuestionPage(name: name))));}
+                  onPressed: (){
+                Navigator.push(context, MaterialPageRoute<void>(
+                          builder: (BuildContext context) => AddQuestionPage(name: name)));
+                }
               ),
+
             ],
           ),
           Expanded(
