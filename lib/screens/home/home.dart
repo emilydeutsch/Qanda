@@ -122,6 +122,21 @@ class _QABoxesState extends State<QABoxes> {
                           child:SingleChildScrollView(child:Column(
                               children: <Widget>[
                                 Text(widget.listOfQuestions[widget.questionIndex], style: TextStyle(fontSize: 26.0)),
+
+                                RaisedButton(
+                                  child: Text("Expand/Collapse"),
+                                  onPressed: (){
+                                    setState(() {
+                                      _isExpanded = !_isExpanded;
+                                    });
+                                  },
+                                ),
+                                RaisedButton(
+                                  child: Text("Answer"),
+                                  onPressed:(){  setState(() {
+                                    _slideType = "Answer";
+                                  });},
+                                ),
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Container(
@@ -142,20 +157,6 @@ class _QABoxesState extends State<QABoxes> {
                                         ]
                                     ),
                                   ),
-                                ),
-                                RaisedButton(
-                                  child: Text("Expand/Collapse"),
-                                  onPressed: (){
-                                    setState(() {
-                                      _isExpanded = !_isExpanded;
-                                    });
-                                  },
-                                ),
-                                RaisedButton(
-                                  child: Text("Answer"),
-                                  onPressed:(){  setState(() {
-                                    _slideType = "Answer";
-                                  });},
                                 ),
                               ]
                           )
@@ -421,7 +422,45 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
     }
 
     return Scaffold(
-      body: Container(
+      drawer: Drawer(
+        /*
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.blue[900], Colors.blue[500],Colors.green[200]]
+                )
+            ),
+
+         */
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  accountName: Text("First Last"),
+                  accountEmail: Text("email@mail.com") ,
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor: Colors.blue ,
+                  ),
+                  decoration: BoxDecoration(color: Color.fromRGBO(150, 204, 179, 1)),
+                ),
+
+                ListTile(
+                  title: Text('logout'),
+                  trailing: Icon(Icons.exit_to_app),
+                  onTap: ()async {
+                    await _auth.signOut();
+                    Navigator.push(context,
+                        SlideRightRoute(page:SignIn())
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+
+      body: Builder(builder: (BuildContext context) { return Container(
         decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
@@ -434,9 +473,10 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
           AppBar(
             title: Text('All the Questions'),
             backgroundColor: Colors.transparent,
+
             leading: IconButton(icon: Icon(Icons.settings),
               onPressed: (){
-
+                Scaffold.of(context).openDrawer();
               }
             ),
             elevation: 0.0,
@@ -497,7 +537,9 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 )
     ],
         ),
-      ),
+      );
+    },
+      )
     );
   }
 }

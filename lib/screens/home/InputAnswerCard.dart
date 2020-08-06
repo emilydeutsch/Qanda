@@ -21,7 +21,7 @@ class _InputAnswerCardState extends State<InputAnswerCard>with SingleTickerProvi
   void initState() {
     super.initState();
     _slideController = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
 
