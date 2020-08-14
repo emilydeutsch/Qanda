@@ -102,9 +102,6 @@ class _QABoxesState extends State<QABoxes> {
                 label: Text('logout'),
                 onPressed: () async {
                   await _auth.signOut();
-                  Navigator.push(context,
-                      SlideRightRoute(page:SignIn())
-                  );
                 },
               )
             ],
@@ -452,9 +449,6 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
                   trailing: Icon(Icons.exit_to_app),
                   onTap: ()async {
                     await _auth.signOut();
-                    Navigator.push(context,
-                        SlideRightRoute(page:SignIn())
-                    );
                   },
                 ),
               ],
