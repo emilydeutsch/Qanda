@@ -407,6 +407,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 
     final user = Provider.of<User>(context);
     String name = "";
+    String email = user.email;
 
     final questions = Provider.of<QuerySnapshot>(context);
     //print(questions.documents);
@@ -438,8 +439,8 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  accountName: Text("First Last"),
-                  accountEmail: Text("email@mail.com") ,
+                  accountName: Text(name),
+                  accountEmail: Text(email),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.blue ,
                   ),
