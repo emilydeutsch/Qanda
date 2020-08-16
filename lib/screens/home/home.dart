@@ -76,7 +76,7 @@ class _QABoxesState extends State<QABoxes> {
         Question_name = doc.data['name'];
       }
       if (doc.documentID == "users") {
-        name = doc.data[user.uid];
+        name = doc.data[user.uid][0];
         print(name);
       }
     }
@@ -96,15 +96,6 @@ class _QABoxesState extends State<QABoxes> {
             title: Text("Today's Question"),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
-                onPressed: () async {
-                  await _auth.signOut();
-                },
-              )
-            ],
           ),
           SizedBox(
               width: double.infinity,
@@ -404,6 +395,8 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 
     final user = Provider.of<User>(context);
     String name = "";
+    bool Is_Teacher;
+
     String email = user.email;
 
     final questions = Provider.of<QuerySnapshot>(context);
@@ -414,8 +407,10 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
       listOfQuestions.add(doc.documentID);
 
       if (doc.documentID == "users") {
-        name = doc.data[user.uid];
+        name = doc.data[user.uid][0];
+        Is_Teacher = doc.data[user.uid][1];
         print(name);
+        print(Is_Teacher);
       }
     }
 
@@ -487,10 +482,13 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
                   );
                 },
               ),*/
-              IconButton(icon: Icon(Icons.add),
+              if (Is_Teacher) IconButton(icon: Icon(Icons.add),
                   onPressed: (){
-                Navigator.push(context, MaterialPageRoute<void>(
-                          builder: (BuildContext context) => AddQuestionPage(name: name)));
+                if (Is_Teacher) {
+                  Navigator.push(context, MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          AddQuestionPage(name: name)));
+                }
                 }
               ),
 
@@ -512,7 +510,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
                   child:SingleChildScrollView(
                   child:Column(
                     children: <Widget>[
-                      Text(listOfQuestions[index], style: TextStyle(fontSize: 20.0)), //TODO: parse question
+                      Text(listOfQuestions[index], style: TextStyle(fontSize: 20.0)),
                       RaisedButton(
                           child:Text("GO"),
                           onPressed: () {

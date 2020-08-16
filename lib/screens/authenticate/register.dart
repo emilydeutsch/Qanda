@@ -27,18 +27,25 @@ class _RegisterState extends State<Register> {
   String password = '';
   String error = '';
 
+  bool _checkedValue = false;
+
   @override
   Widget build(BuildContext context) {
 
     final questions = Provider.of<QuerySnapshot>(context);
 
-    Map<String, dynamic> names;
+    //Map<String, dynamic> names;
+    Map<String, dynamic> names = {};
 
     for (var doc in questions.documents) {
       if (doc.documentID == "users") {
+        print(doc.data);
+        print("hi");
         names = doc.data;
       }
     }
+
+
 
     return loading ? Loading() : StreamProvider<QuerySnapshot>.value(
       value: DatabaseService().questions,
@@ -66,7 +73,7 @@ class _RegisterState extends State<Register> {
 
               ),
               SizedBox(
-                height: 285,
+                height: 326,
                 child: Padding(
                 padding: const EdgeInsets.all(8.0),
                   child: Card(
@@ -101,6 +108,7 @@ class _RegisterState extends State<Register> {
                             }
                         ),
                       ),
+
                   Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: TextFormField(
@@ -112,6 +120,19 @@ class _RegisterState extends State<Register> {
                       }
                     ),
                   ),
+                      Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child:CheckboxListTile(
+                    title: Text("Are you a teacher?"),
+                    value: _checkedValue,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _checkedValue = newValue;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                  ),),
+
                   Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: RaisedButton(
@@ -127,8 +148,10 @@ class _RegisterState extends State<Register> {
                             dynamic result = await _auth.registerWithEmailAndPassword(email, password);
                             print("some thing:");
                             print(result);
+                            print(names);
+                            print(result.uid);
 
-                            names[result.uid] = name;
+                            names[result.uid] = [name, _checkedValue];
                             print(names);
                             await DatabaseService().createUserData(names);
 
