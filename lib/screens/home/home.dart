@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:qanda/screens/authenticate/sign_in.dart';
 import 'package:qanda/models/user.dart';
 import 'package:qanda/screens/home/CollapseCard.dart';
 import 'package:qanda/screens/home/InputAnswerCard.dart';
@@ -52,7 +51,6 @@ class _QABoxesState extends State<QABoxes> {
   bool _isExpanded = true;
   String _slideType; //used to change the slide type od the input card
   TextEditingController _inputController = TextEditingController();
-  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +108,6 @@ class _QABoxesState extends State<QABoxes> {
                           child:SingleChildScrollView(child:Column(
                               children: <Widget>[
                                 Text(widget.listOfQuestions[widget.questionIndex], style: TextStyle(fontSize: 26.0)),
-
-                                RaisedButton(
-                                  child: Text("Expand/Collapse"),
-                                  onPressed: (){
-                                    setState(() {
-                                      _isExpanded = !_isExpanded;
-                                    });
-                                  },
-                                ),
                                 RaisedButton(
                                   child: Text("Answer"),
                                   onPressed:(){  setState(() {
@@ -141,7 +130,20 @@ class _QABoxesState extends State<QABoxes> {
                                           Padding(
                                               padding: EdgeInsets.all(5.0),
                                               child:Text(Question_name)
-                                          )
+                                          ),
+                                          Spacer(),
+                                          IconButton(
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            icon:Icon(
+                                                _isExpanded ? Icons.expand_less : Icons.expand_more
+                                            ),
+                                            onPressed: (){
+                                              setState(() {
+                                                _isExpanded = !_isExpanded;
+                                              });
+                                            },
+                                          ),
                                         ]
                                     ),
                                   ),
@@ -416,17 +418,6 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 
     return Scaffold(
       drawer: Drawer(
-        /*
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.blue[900], Colors.blue[500],Colors.green[200]]
-                )
-            ),
-
-         */
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
@@ -435,6 +426,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
                   accountEmail: Text(email),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.blue ,
+                    child: Text(name.substring(0,1))
                   ),
                   decoration: BoxDecoration(color: Color.fromRGBO(150, 204, 179, 1)),
                 ),
