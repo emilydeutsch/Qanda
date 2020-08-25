@@ -406,13 +406,13 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
 
     listOfQuestions.clear();
     for (var doc in questions.documents) {
-      listOfQuestions.add(doc.documentID);
-
       if (doc.documentID == "users") {
         name = doc.data[user.uid][0];
         Is_Teacher = doc.data[user.uid][1];
         print(name);
         print(Is_Teacher);
+      } else {
+        listOfQuestions.add(doc.documentID);
       }
     }
 
@@ -426,7 +426,7 @@ class _GridQuestionsViewState extends State<GridQuestionsView> {
                   accountEmail: Text(email),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.blue ,
-                    child: Text(name.substring(0,1))
+                    child: Text(name.substring(0,1),style: TextStyle(fontSize: 30.0))
                   ),
                   decoration: BoxDecoration(color: Color.fromRGBO(150, 204, 179, 1)),
                 ),
