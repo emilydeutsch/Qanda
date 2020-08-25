@@ -1,16 +1,15 @@
-# qanda
+# Qanda - A Mobile Classroom Discussion Application
 
-A new Flutter application.
+## What is it?
+Qanda is a mobile messaging application that provides classrooms with the opportunity to discuss and answer questions in an online learning environment. The app allows teachers to interact with students by posting discussion questions and having students answer them. The app currently supports both Android and iOS devices.
+## How did we build it?
+* [Flutter](https://flutter.dev/) – Beautiful native app written in dart
+* [Firebase](https://firebase.google.com/) – NoSQL database for discussion and user data, and user authentication 
+* [Android Studio](https://developer.android.com/studio) – Code development and testing 
+## Check it out 
+Screenshots coming soon...
+## Features we hope to add soon
+* User profile pictures
+* A theme selection
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
