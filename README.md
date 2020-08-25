@@ -7,16 +7,20 @@ Qanda is a mobile messaging application that provides classrooms with the opport
 * [Firebase](https://firebase.google.com/) – NoSQL database for discussion and user data, and user authentication 
 * [Android Studio](https://developer.android.com/studio) – Code development and testing 
 ## Check it out 
-### Screenshots:
-
+### Demo
 <p align="middle">
-   <img src="assets/images/Register.png" width="100"/>
-  <img src="assets/images/Login.png" width="100"/>
-  <img src="assets/images/MainPageTeacher.png" width="100" />  
-  <img src="assets/images/NewQuestion.png" width="100" />
-  <img src="assets/images/QuestionPage.png" width="100" />
-  <img src="assets/images/NewAnswer.png" width="100" /> 
-  <img src="assets/images/UserInfo.png" width="100"/>
+   <img src="assets/images/preview.gif" width="250"/>
+</p>
+
+### Screenshots:
+<p align="middle">
+  <img src="assets/images/Register.png" width="130"/>
+  <img src="assets/images/Login.png" width="130"/>
+  <img src="assets/images/MainPageTeacher.png" width="130" />  
+  <img src="assets/images/NewQuestion.png" width="130" />
+  <img src="assets/images/QuestionPage.png" width="130" />
+  <img src="assets/images/NewAnswer.png" width="130" /> 
+  <img src="assets/images/UserInfo.png" width="130"/>
 </p>
 
 ## Features we hope to add soon
